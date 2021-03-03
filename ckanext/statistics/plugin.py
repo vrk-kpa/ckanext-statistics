@@ -1,7 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 from ckan.lib.plugins import DefaultTranslation
-from logic.get import get_all_public_datasets
+from ckanext.statistics.logic.get import get_all_public_datasets
 
 import logging
 log = logging.getLogger(__name__)

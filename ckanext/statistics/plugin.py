@@ -1,8 +1,10 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-from ckanext.report.interfaces import IReport
 from ckan.lib.plugins import DefaultTranslation
 from logic.get import get_all_public_datasets
+
+import logging
+log = logging.getLogger(__name__)
 
 class StatisticsPlugin(plugins.SingletonPlugin, DefaultTranslation):
     plugins.implements(plugins.IConfigurer)
@@ -35,13 +37,20 @@ class StatisticsPlugin(plugins.SingletonPlugin, DefaultTranslation):
         return {'get_all_public_datasets': get_all_public_datasets}
 
 class PublisherActivityReportPlugin(plugins.SingletonPlugin):
-    plugins.implements(IReport)
+
     plugins.implements(plugins.ITemplateHelpers)
 
-    # IReport
-    def register_reports(self):
-        import reports
-        return [reports.publisher_activity_report_info]
+    try:
+        from ckanext.report.interfaces import IReport
+        plugins.implements(IReport)
+
+        # IReport
+        def register_reports(self):
+            from reports import publisher_activity_report_info
+            return [publisher_activity_report_info]
+    except ImportError:
+        log.warning("ckanext-report is not installed, reports are not available")
+        pass
 
     # ITemplateHelpers
     def get_helpers(self):

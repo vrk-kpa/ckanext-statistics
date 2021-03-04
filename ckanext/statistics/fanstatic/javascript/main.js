@@ -156,7 +156,7 @@ ckan.module('statistics', function($){
             dates,
             self.createCategoryApps(
               self.data.filtered.apps,
-              self.data.filtered.appCategories[self.options.locale],
+              self.data.filtered.appCategories,
               self.state.dateRangeFilter
             )
           )
@@ -666,9 +666,9 @@ ckan.module('statistics', function($){
 
           for (var iExtra in apps[iApp].extras) {
             var extra = apps[iApp].extras[iExtra];
-            if (extra.key === 'category') {
-              var categoryLists = JSON.parse(extra.value);
-              if (categoryLists[self.options.locale] && categoryLists[self.options.locale].indexOf(categories[iCategory]) !== -1) {
+            if (extra.key === 'showcase_type') {
+              var categoryLists = extra.value.split(',');
+              if (categoryLists && categoryLists.indexOf(categories[iCategory]) !== -1) {
                 resultItem.all ++
                 resultItem.specific ++
               }
@@ -746,7 +746,7 @@ ckan.module('statistics', function($){
           self.data.filtered.apps,
           self.createCategoryApps(
             self.data.filtered.apps,
-            self.data.filtered.appCategories[self.options.locale],
+            self.data.filtered.appCategories,
             self.state.dateRangeFilter
           )
         )

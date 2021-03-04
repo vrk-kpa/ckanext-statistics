@@ -1,6 +1,7 @@
 {% extends "statistics/read_base.html" %}
 
 {% block pre_primary %}
+  {% resource 'ytp_dataset_js/form.js' %}
   <div class="page-hero"></div>
  <div data-module="statistics" class="statistics-page">
     <div class="js-statistics-loading statistics-loading">
@@ -27,12 +28,12 @@
          <div class="row">
            <div class="col-lg-2 col-lg-offset-3 col-md-3 col-md-offset-1 col-xs-4 col-statistics-condensed">
              <div class="form-group has-datepicker">
-               <input class="form-control js-statistics-filter-start-date" type="text" />
+               <input class="form-control js-statistics-filter-start-date" type="text" data-datepicker/>
              </div>
            </div>
            <div class="col-lg-2 col-md-3 col-xs-4 col-statistics-condensed">
              <div class="form-group has-datepicker">
-               <input class="form-control js-statistics-filter-end-date" type="text" />
+               <input class="form-control js-statistics-filter-end-date" type="text" data-datepicker/>
              </div>
            </div>
            <div class="col-lg-2 col-md-4 col-xs-4 col-statistics-condensed">
@@ -127,6 +128,5 @@
         <div class="js-category-app-counts"></div>
       </div>
     </div>
-
   </div>
 {% endblock %}

@@ -133,26 +133,14 @@ Api.prototype._preprocess = function (data) {
     // Go through all extra fields of the app, because category information is there
     for (iExtra in app.extras) {
       var extra = app.extras[iExtra]
-      // Only use the 'category' extra fields
-      if (extra.key === 'category') {
-        // The value of category is saved as a string of JS array statement
-        eval('var categoryLists = ' + extra.value)
-        // Add categories of each language's list
-        for (lang in categoryLists) {
-          data.appCategories[lang] = data.appCategories[lang]|| []
-          for (iCategory in categoryLists[lang]) {
-            var categoryName = categoryLists[lang][iCategory]
-            if (data.appCategories[lang].indexOf(categoryName) === -1) {
-              data.appCategories[lang].push(categoryName)
-            }
-          }
-        }
+      // Only use the 'showcase_type' extra fields
+      if (extra.key === 'showcase_type') {
+        data.appCategories = extra.value.split(',')
       }
     }
   }
-  for (lang in data.appCategories) {
-    data.appCategories[lang].sort(alphabeticsOrder)
-  }
+  data.appCategories.sort(alphabeticsOrder)
+
   return data
 }
 

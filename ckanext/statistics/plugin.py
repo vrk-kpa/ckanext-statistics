@@ -1,5 +1,6 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+from ckan import authz
 from ckan.lib.plugins import DefaultTranslation
 from ckanext.statistics.logic.get import get_all_public_datasets
 
@@ -35,6 +36,7 @@ class StatisticsPlugin(plugins.SingletonPlugin, DefaultTranslation):
     # IActions
     def get_actions(self):
         return {'get_all_public_datasets': get_all_public_datasets}
+
 
 class PublisherActivityReportPlugin(plugins.SingletonPlugin):
 

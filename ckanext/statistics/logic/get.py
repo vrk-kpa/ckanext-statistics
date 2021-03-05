@@ -1,6 +1,7 @@
 from ckan.plugins.toolkit import get_action
 from ckan.logic import side_effect_free
 
+
 @side_effect_free
 def get_all_public_datasets(context, data_dict):
     datasets = []

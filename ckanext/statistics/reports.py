@@ -1,10 +1,11 @@
 import datetime
 import collections
 
-from ckan.common import OrderedDict, _
+from ckan.common import OrderedDict
 from ckanext.report import lib
 import ckan.plugins as p
 from ckan.plugins import toolkit
+
 
 def publisher_activity(organization, include_sub_organizations=False):
     """
@@ -26,7 +27,8 @@ def publisher_activity(organization, include_sub_organizations=False):
         for quarter_name in quarters:
             datasets += sorted(created[quarter_name], key=lambda x: x[1])
             datasets += sorted(modified[quarter_name], key=lambda x: x[1])
-        columns = ('Dataset name', 'Dataset title', 'Dataset notes', 'Modified or created', 'Quarter', 'Timestamp', 'Author', 'Published')
+        columns = ('Dataset name', 'Dataset title', 'Dataset notes', 'Modified or created', 'Quarter',
+                   'Timestamp', 'Author', 'Published')
 
         quarters_iso = dict(
             [(last_or_this, [date_.isoformat() for date_ in q_list])
@@ -49,8 +51,8 @@ def publisher_activity(organization, include_sub_organizations=False):
         totals = collections.defaultdict(int)
         import ckan.model as model
         all_orgs = model.Session.query(model.Group). \
-            filter(model.Group.type=='organization'). \
-            filter(model.Group.state=='active').order_by('name'). \
+            filter(model.Group.type == 'organization'). \
+            filter(model.Group.state == 'active').order_by('name'). \
             all()
         for organization in add_progress_bar(all_orgs):
             created, modified = _get_activity(
@@ -81,6 +83,7 @@ def publisher_activity(organization, include_sub_organizations=False):
                 'totals': totals,
                 'period': period_iso}
 
+
 def get_quarter_dates(datetime_now):
     '''Returns the dates for this (current) quarter and last quarter. Uses
     calendar year, so 1 Jan to 31 Mar etc.'''
@@ -108,8 +111,9 @@ def get_quarter_dates_merged(datetime_now):
         this_q_started.year + (this_q_started.month-3)/12,
         (this_q_started.month-4) % 12 + 1,
         1)
-    last_q_ended = this_q_started - datetime.timedelta(days=1)
+
     return {'this_and_last': (last_q_started, this_q_ended)}
+
 
 def _get_activity(organization_name, include_sub_organizations, periods):
     import ckan.model as model
@@ -209,6 +213,7 @@ def _get_activity(organization_name, include_sub_organizations, periods):
                      dates_formatted, authors, published))
     return created, modified
 
+
 def add_progress_bar(iterable, caption=None):
     try:
         # Add a progress bar, if it is installed
@@ -221,11 +226,13 @@ def add_progress_bar(iterable, caption=None):
     except ImportError:
         return iterable
 
+
 def publisher_activity_combinations():
     for org in lib.all_organizations(include_none=True):
         for include_sub_organizations in (False, True):
             yield {'organization': org,
                    'include_sub_organizations': include_sub_organizations}
+
 
 publisher_activity_report_info = {
     'name': 'publisher-activity',

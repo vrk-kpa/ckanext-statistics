@@ -6,6 +6,7 @@ from ckan import authz
 render = base.render
 c = tk.c
 
+
 class StatisticsController(tk.BaseController):
 
     def statistics_read(self):
@@ -17,9 +18,8 @@ class StatisticsController(tk.BaseController):
                 location_data = {}
 
             return render('statistics/statistics_read.html', extra_vars={"data": location_data})
-                
-        return tk.abort(403, tk._("User must be logged in to view this page"))
 
+        return tk.abort(403, tk._("User must be logged in to view this page"))
 
     def reports_read(self):
         return render('statistics/reports_read.html', extra_vars={})

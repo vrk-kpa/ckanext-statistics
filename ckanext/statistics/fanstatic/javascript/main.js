@@ -36,7 +36,7 @@ ckan.module('statistics', function($){
       schemas: {
         datasets: {
           nameField: 'title_translated',
-          dateField: 'date_released',
+          dateField: 'metadata_created',
           skip: function (dataset) {
             return false
           }
@@ -351,7 +351,7 @@ ckan.module('statistics', function($){
 
     getMaxDateRange: function (allData) {
       // eg. start date of the whole portal = 1.1. on the year of first dataset/app/article
-      var firstDateDataset = d3.min(allData.datasets, function (d) { return d.date_released });
+      var firstDateDataset = d3.min(allData.datasets, function (d) { return d.metadata_created });
       var firstDateApp = d3.min(allData.apps, function (d) { return d.metadata_created });
 
       // Default value if no data exists
@@ -366,7 +366,7 @@ ckan.module('statistics', function($){
       firstDate = moment.utc(firstDate)
       var firstDateVis = moment.utc([firstDate.year(), 0, 1])
 
-      var lastDateDataset = d3.max(allData.datasets, function (d) { return d.date_released });
+      var lastDateDataset = d3.max(allData.datasets, function (d) { return d.metadata_created });
       var lastDateApp = d3.max(allData.apps, function (d) { return d.metadata_created });
 
       var today = moment.utc()

@@ -12,9 +12,8 @@ class StatisticsController(tk.BaseController):
     def statistics_read(self):
         if authz.auth_is_loggedin_user():
             try:
-                from ckanext.googleanalytics.reports import google_analytics_location_report
-                location_data = google_analytics_location_report()
-            except ImportError:
+                location_data = tk.get_action('report_data_get')({}, {'id': 'google-analytics-location'})[0]
+            except (tk.NotAuthorized, tk.NotFound):
                 location_data = {}
 
             return render('statistics/statistics_read.html', extra_vars={"data": location_data})

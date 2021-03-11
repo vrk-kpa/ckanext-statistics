@@ -126,7 +126,7 @@ Api.prototype._preprocess = function (data) {
   data.formats.sort(alphabeticsOrder)
 
   // Create app category list. Separate list of each language because of the structure of the api response.
-  data.appCategories = {}
+  data.appCategories = []
   // Go through all apps
   for (iApp in data.apps) {
     var app = data.apps[iApp]

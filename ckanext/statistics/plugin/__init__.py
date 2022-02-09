@@ -1,41 +1,62 @@
+import sys
+import os
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+
 from ckan.lib.plugins import DefaultTranslation
 from ckanext.statistics.logic.get import get_all_public_datasets
 
+from ckanext.statistics import auth
 import logging
 log = logging.getLogger(__name__)
 
 
-class StatisticsPlugin(plugins.SingletonPlugin, DefaultTranslation):
+if toolkit.check_ckan_version('2.9'):
+    from . import flask_plugin as platform
+else:
+    from . import pylons_plugin as platform
+
+
+class StatisticsPlugin(platform.MixinPlugin, plugins.SingletonPlugin, DefaultTranslation):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IRoutes, inherit=True)
     if toolkit.check_ckan_version(min_version='2.5.0'):
         plugins.implements(plugins.ITranslation, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
 
     # IConfigurer
 
     def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_resource('fanstatic', 'statistics')
-
-    # IRoutes
-
-    def before_map(self, map):
-        map.connect('/statistics',
-                    controller='ckanext.statistics.controller:StatisticsController',
-                    action='statistics_read')
-
-        map.connect('/statistics/internal',
-                    controller='ckanext.statistics.controller:StatisticsController',
-                    action='reports_read')
-
-        return map
+        toolkit.add_template_directory(config_, '../templates')
+        toolkit.add_resource('../fanstatic', 'statistics')
 
     # IActions
     def get_actions(self):
         return {'get_all_public_datasets': get_all_public_datasets}
+
+    # IAuthFunctions
+
+    def get_auth_functions(self):
+        return {'statistics_read': auth.statistics_read}
+
+    # ITranslator
+
+    # The following methods are copied from ckan.lib.plugins.DefaultTranslation
+    # and have been modified to fix a bug in CKAN 2.5.1 that prevents CKAN from
+    # starting. In addition by copying these methods, it is ensured that Data
+    # Requests can be used even if Itranslation isn't available (less than 2.5)
+
+    def i18n_directory(self):
+        '''Change the directory of the *.mo translation files
+        The default implementation assumes the plugin is
+        ckanext/myplugin/plugin.py and the translations are stored in
+        i18n/
+        '''
+        # assume plugin is called ckanext.<myplugin>.<...>.PluginClass
+        extension_module_name = '.'.join(self.__module__.split('.')[:3])
+        module = sys.modules[extension_module_name]
+        return os.path.join(os.path.dirname(module.__file__), '../i18n')
 
 
 class PublisherActivityReportPlugin(plugins.SingletonPlugin):

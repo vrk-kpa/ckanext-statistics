@@ -4,7 +4,11 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'statistics/main' %}
+  {% if h.ckan_version().split('.')|map('int')|list >= [2, 9, 0] %}
+    {% asset "statistics/main_js" %}
+  {% else %}
+    {% resource "statistics/main" %}
+  {% endif %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}

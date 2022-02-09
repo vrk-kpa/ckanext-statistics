@@ -129,34 +129,46 @@
       </div>
     </div>
 
-   {% resource "ckanext-matomo_js/chart-doughnut.js" %}
-   {% resource "ckanext-matomo_js/chart-column.js" %}
+    {% if h.ckan_version().split('.')|map('int')|list >= [2, 9, 0] %}
+      {% asset "ckanext-matomo_js/chart-doughnut_js" %}
+      {% asset "ckanext-matomo_js/chart-column_js" %}
+    {% else %}
+      {% resource "ckanext-matomo_js/chart-doughnut.js" %}
+      {% resource "ckanext-matomo_js/chart-column.js" %}
+    {% endif %}
+
 
    <script>
      var chartData = {
        finland_vs_world_last_month: [
+         {% if data.data is defined %}
          {% for row in data['data']['finland_vs_world_last_month'] %}
            {
              value: {{ row.total_visits }},
              label: '{{ row.location_name }}'
            },
          {% endfor %}
+         {% endif %}
        ],
        finland_vs_world_all: [
+         {% if data.data is defined %}
          {% for row in data['data']['finland_vs_world_all'] %}
            {
              value: {{ row.total_visits }},
              label: '{{ row.location_name }}'
            },
          {% endfor %}
+         {% endif %}
        ],
        visitors_by_months: [
+         {% if data.data is defined %}
          {% for row in data['data']['sessions_by_month'] %}
            {
              value: {{ row.visits }},
              label: '{{ row.date }}'
            },
          {% endfor %}
+         {% endif %}
        ]
      }
    </script>

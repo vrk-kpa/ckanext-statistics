@@ -1,2 +1,2 @@
 def statistics_read(context, data_dict):
-    return 'user' in context
+    return {'success': 'user' in context}

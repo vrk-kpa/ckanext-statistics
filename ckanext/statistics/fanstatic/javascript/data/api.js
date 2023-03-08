@@ -23,7 +23,7 @@ Api.prototype.getAllData = function (callback, delay) {
   self._stepLoaded(self._texts.loadOrganizations, 66.1);
 
   return Promise.all([
-    self.get('group_tree'),
+    self.get('group_tree?only_approved=true'),
     self.get('group_list?all_fields=true&include_extras=true'),
     self.get('get_all_public_datasets'),
     self.get('ckanext_showcase_list?include_private=false')
@@ -64,7 +64,12 @@ Api.prototype.get = function(endPoint) {
   return new Promise(function(resolve, reject) {
     d3.json(url).get(function (error, response) {
       if (error) {
-        return reject(error);
+        if (error.type == 'error') {
+          return reject(error);
+        } else {
+          // A non-error event, keep trying
+          return;
+        }
       }
       return resolve(response.result || []);
     });

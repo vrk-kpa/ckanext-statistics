@@ -130,13 +130,8 @@
     </div>
 
     {% if 'matomo' in g.plugins %}
-      {% if h.ckan_version().split('.')|map('int')|list >= [2, 9, 0] %}
-        {% asset "ckanext-matomo_js/chart-doughnut_js" %}
-        {% asset "ckanext-matomo_js/chart-column_js" %}
-      {% else %}
-        {% resource "ckanext-matomo_js/chart-doughnut.js" %}
-        {% resource "ckanext-matomo_js/chart-column.js" %}
-      {% endif %}
+      {% asset "ckanext-matomo_js/chart-doughnut_js" %}
+      {% asset "ckanext-matomo_js/chart-column_js" %}
 
       <script>
         var chartData = {

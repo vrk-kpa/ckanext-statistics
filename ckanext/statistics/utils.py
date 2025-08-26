@@ -7,7 +7,7 @@ def statistics_read():
         context = {'model': model, 'session': model.Session,
                    'user': tk.c.user, 'auth_user_obj': tk.c.userobj}
         tk.check_access('statistics_read', context)
-        if 'matomo' in tk.config.get('ckan.plugins', '').split():
+        if 'matomo' in tk.config.get('ckan.plugins', []):
             try:
                 location_data = tk.get_action('report_data_get')({}, {'id': 'matomo-location'})[0]
             except (tk.NotAuthorized, tk.ObjectNotFound):
